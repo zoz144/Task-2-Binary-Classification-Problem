@@ -1,8 +1,6 @@
 import numpy as np
-from sklearn.base import TransformerMixin
 
-
-class CustomImputer(TransformerMixin):
+class CustomImputer():
 
     def __init__(self):
         """Impute missing values.
