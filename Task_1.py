@@ -1,6 +1,7 @@
 # Importing libraries
 import numpy as np
 import pandas as pd
+import random
 from CustomImputer import CustomImputer
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import StandardScaler
@@ -80,6 +81,25 @@ X_valid = sc_X.transform(X_valid)
 
 
 '''*************************** Train and predict data with diffrent methods ************************************************'''
+# Train and predict data with Classification Neural Network
+from keras import Sequential
+from keras.regularizers import l2
+from keras.layers import Dense
+random.seed( 3 )
+classifier = Sequential()
+classifier.add(Dense(5, activation='relu', kernel_regularizer=l2(0.05), bias_regularizer=l2(0.05), kernel_initializer= 'random_normal', input_dim=50))
+classifier.add(Dense(5, activation='relu', kernel_regularizer=l2(0.05), bias_regularizer=l2(0.05) , kernel_initializer= 'random_normal' ))
+classifier.add(Dense(1, activation='sigmoid', kernel_initializer= 'random_normal' ))
+classifier.compile(optimizer ='adam',loss='binary_crossentropy', metrics =['accuracy'])
+classifier.fit(X_train,Y_train, batch_size=10, epochs=20)
+eval_model=classifier.evaluate(X_train, Y_train)
+y_pred=classifier.predict(X_valid)
+y_pred =(y_pred>0.5)
+cm_NN = confusion_matrix(Y_valid, y_pred)
+acc_NN = ((cm_NN[0,0] + cm_NN[1,1])/200) * 100
+print("Accuracy with Nueral Network Classifier is " , acc_NN, '%')
+
+
 # Train and predict data with Logistic Regression
 from sklearn.linear_model import LogisticRegression
 classifier = LogisticRegression(random_state = 0)
@@ -88,6 +108,7 @@ Y_pred  = classifier.predict(X_valid)
 cm_Log = confusion_matrix(Y_valid , Y_pred)
 acc_log = ((cm_Log[0,0] + cm_Log[1,1])/200) * 100
 print("Accuracy with logistic classifier is " , acc_log , '%')
+
 
 # Train and predict data with K-Nearest Neighbors Classifier (KNN)
 from sklearn.neighbors import KNeighborsClassifier
@@ -98,6 +119,7 @@ cm_KNN = confusion_matrix(Y_valid, y_pred)
 acc_KNN = ((cm_KNN[0,0] + cm_KNN[1,1])/200) * 100
 print("Accuracy with K-Nearest Neighbors Classifier (KNN) is " , acc_KNN , '%')
 
+
 # Train and predict data with Support Vector Classifier (SVC)
 from sklearn.svm import SVC
 classifier = SVC(kernel = 'poly', random_state = 0)
@@ -106,6 +128,7 @@ y_pred = classifier.predict(X_valid)
 cm_SVC = confusion_matrix(Y_valid, y_pred)
 acc_SVC = ((cm_SVC[0,0] + cm_SVC[1,1])/200) * 100
 print("Accuracy with Support Vector Classifier (SVC) is " , acc_SVC , '%')
+
 
 # Train and predict data with RandomForest Classifier 
 from sklearn.ensemble import RandomForestClassifier
