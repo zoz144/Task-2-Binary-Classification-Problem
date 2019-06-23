@@ -1,14 +1,7 @@
 import numpy as np
-
+#Custom Imputer that takes the most frequent value in series ,if the data type was Object, and fill N/A values with this value
 class CustomImputer():
 
-    def __init__(self):
-        """Impute missing values.
-
-        If the Series is of dtype Object, then impute with the most frequent object.
-        If the Series is not of dtype Object, then impute with the mean.  
-
-        """
     def fit(self, X):
         if   X.dtype == np.dtype('O'): self.fill = X.value_counts().index[0]
         else                            : self.fill = X.mean()
